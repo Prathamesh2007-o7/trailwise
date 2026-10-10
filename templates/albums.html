@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="page-heading">
+  <p class="eyebrow">YOUR HIKING MEMORIES</p>
+  <h1>Trail journals</h1>
+  <p>Keep the moments that made the climb worth it.</p>
+</section>
+
+<section class="new-album panel">
+  <h2>Start a new journal</h2>
+  <form class="album-form" action="{{ url_for('create_album') }}" method="post">
+    <select name="hike_slug" required>
+      <option value="">Choose a hike</option>
+      {% for hike in all_hikes %}
+        <option value="{{ hike.slug }}">{{ hike.name }} · {{ hike.place }}</option>
+      {% endfor %}
+    </select>
+    <input name="title" required placeholder="e.g. Monsoon at Rajmachi">
+    <input type="date" name="hike_date">
+    <button>Create album</button>
+  </form>
+</section>
+
+<div class="album-grid">
+  {% for album in albums %}
+    <a class="album-card" href="{{ url_for('album_detail', album_id=album.id) }}">
+      <div class="album-cover">
+        {% if album.photo_count %}
+          {{ album.photo_count }} photos
+        {% else %}
+          Your next story
+        {% endif %}
+      </div>
+      <p class="eyebrow">{{ album.hike_slug|replace('-', ' ') }}</p>
+      <h2>{{ album.title }}</h2>
+      <span>{{ album.hike_date or 'No date added' }}</span>
+    </a>
+  {% else %}
+    <p class="empty">No journals yet. Your first summit photo deserves a home.</p>
+  {% endfor %}
+</div>
+{% endblock %}

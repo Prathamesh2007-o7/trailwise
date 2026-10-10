@@ -1,0 +1,56 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<section class="hero">
+  <div>
+    <p class="eyebrow">MAHARASHTRA, INDIA</p>
+    <h1>Find your next<br><i>good climb.</i></h1>
+    <p class="hero-copy">Thoughtful trail guides for weekends outside the city—weather, difficulty, risk and exactly what to pack.</p>
+    <form class="search">
+      <input name="q" value="{{ query }}" placeholder="Search Lonavala, forts, peaks…">
+      <button>Search</button>
+    </form>
+  </div>
+
+  <div class="hero-card">
+    <span>Today’s intention</span>
+    <strong>Leave no trace.<br>Come back with stories.</strong>
+    <small>Plan smart. Walk gently.</small>
+  </div>
+</section>
+
+<section class="browse">
+  <div class="section-heading">
+    <div>
+      <p class="eyebrow">CHOOSE A TRAIL</p>
+      <h2>Where will you wander?</h2>
+    </div>
+    <form class="filters">
+      <select name="difficulty" onchange="this.form.submit()">
+        <option value="">All levels</option>
+        {% for level in ['Beginner','Moderate','Challenging'] %}
+          <option value="{{ level }}" {% if selected_difficulty == level %}selected{% endif %}>{{ level }}</option>
+        {% endfor %}
+      </select>
+    </form>
+  </div>
+
+  <div class="hike-grid">
+    {% for hike in hikes %}
+      <a class="hike-card" href="{{ url_for('hike_detail', slug=hike.slug) }}">
+        <img src="{{ hike.image }}" alt="{{ hike.name }}">
+        <div class="card-body">
+          <div class="card-top">
+            <span>{{ hike.place }}</span>
+            <b class="risk risk-{{ 'low' if hike.risk < 35 else 'mid' if hike.risk < 60 else 'high' }}">{{ hike.risk }}/100 risk</b>
+          </div>
+          <h3>{{ hike.name }}</h3>
+          <p>{{ hike.difficulty }} · {{ hike.distance }} · {{ hike.duration }}</p>
+        </div>
+      </a>
+    {% else %}
+      <p>No trails match that search. Try a place like Lonavala or Pawna.</p>
+    {% endfor %}
+  </div>
+</section>
+{% endblock %}

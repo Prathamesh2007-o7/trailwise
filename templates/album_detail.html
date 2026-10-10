@@ -1,0 +1,33 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<a class="back" href="{{ url_for('albums') }}">← All journals</a>
+
+<section class="page-heading compact">
+  <p class="eyebrow">{{ hike.name|upper if hike else 'TRAIL JOURNAL' }}</p>
+  <h1>{{ album.title }}</h1>
+  <p>{{ album.hike_date or 'Date not added' }}</p>
+</section>
+
+<section class="upload-box panel">
+  <h2>Add a trail moment</h2>
+  <form class="upload-form" action="{{ url_for('upload_photo', album_id=album.id) }}" method="post" enctype="multipart/form-data">
+    <input type="file" name="photo" accept="image/*" required>
+    <input name="caption" placeholder="A small caption (optional)">
+    <button>Upload photo</button>
+  </form>
+</section>
+
+<div class="photo-grid">
+  {% for photo in photos %}
+    <figure>
+      <img src="{{ url_for('uploaded_file', filename=photo.filename) }}" alt="{{ photo.caption or 'Hiking memory' }}">
+      {% if photo.caption %}
+        <figcaption>{{ photo.caption }}</figcaption>
+      {% endif %}
+    </figure>
+  {% else %}
+    <p class="empty">Add a photo to begin this story.</p>
+  {% endfor %}
+</div>
+{% endblock %}
